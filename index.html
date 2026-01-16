@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Birthday</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0b0b0f;
+  color:white;
+  text-align:center;
+  overflow-x:hidden;
+}
+
+/* COMMON */
+.hidden{display:none}
+button{
+  padding:12px 18px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
+  background:#e50914;
+  color:white;
+}
+
+/* STICKERS */
+.sticker{
+  position:fixed;
+  top:-40px;
+  font-size:22px;
+  animation:fall linear infinite;
+}
+@keyframes fall{
+  to{transform:translateY(120vh) rotate(180deg);}
+}
+
+/* STEP BOX */
+.box{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+/* GAME */
+#gameArea{
+  width:90%;
+  height:300px;
+  border:2px dashed #fff;
+  position:relative;
+  overflow:hidden;
+}
+.spider{
+  position:absolute;
+  top:-30px;
+  font-size:24px;
+  animation:drop 2s linear forwards;
+}
+@keyframes drop{
+  to{top:330px;}
+}
+
+/* BIRTHDAY PAGE */
+.hero{
+  padding:40px 20px;
+  background:linear-gradient(180deg,#e50914,#000);
+}
+.photos{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  padding:20px;
+}
+.photos img{
+  width:100%;
+  border-radius:10px;
+}
+.quote{
+  font-style:italic;
+  opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+
+<!-- STEP 1 -->
+<div id="step1" class="box">
+  <h1>🔒 Secret Page</h1>
+  <p>Answer the question to continue</p>
+  <input id="answer" placeholder="Your answer">
+  <br><br>
+  <button onclick="checkAnswer()">Submit</button>
+</div>
+
+<!-- STEP 2 -->
+<div id="step2" class="box hidden">
+  <h2>🧩 Step 2: Tap all webs</h2>
+  <p id="webCount">0 / 5</p>
+  <button onclick="tapWeb()">🕸️ Tap Web</button>
+</div>
+
+<!-- STEP 3 -->
+<div id="step3" class="box hidden">
+  <h2>🎮 Catch 5 spiders</h2>
+  <p>Score: <span id="score">0</span></p>
+  <div id="gameArea"></div>
+</div>
+
+<!-- BIRTHDAY PAGE -->
+<div id="birthday" class="hidden">
+  <div class="hero">
+    <h1>🎉 Happy Birthday XYZ 🎉</h1>
+    <p>You unlocked the secret</p>
+  </div>
+
+  <div class="photos">
+    <img src="https://via.placeholder.com/300">
+    <img src="https://via.placeholder.com/300">
+    <img src="https://via.placeholder.com/300">
+    <img src="https://via.placeholder.com/300">
+  </div>
+
+  <p style="padding:20px">
+    This is where your long paragraph goes.  
+    You can write anything emotional, funny, or special here.
+  </p>
+
+  <p class="quote">“With great power comes great birthday.”</p>
+  <p class="quote">“You are someone special.”</p>
+</div>
+
+<script>
+/* SETTINGS */
+const correctAnswer = "spider";
+
+/* STEP 1 */
+function checkAnswer(){
+  if(document.getElementById("answer").value.toLowerCase() === correctAnswer){
+    step1.classList.add("hidden");
+    step2.classList.remove("hidden");
+  }else{
+    alert("Wrong answer");
+  }
+}
+
+/* STEP 2 */
+let webs = 0;
+function tapWeb(){
+  webs++;
+  document.getElementById("webCount").innerText = webs+" / 5";
+  if(webs===5){
+    step2.classList.add("hidden");
+    step3.classList.remove("hidden");
+    startGame();
+  }
+}
+
+/* STEP 3 */
+let score = 0;
+function startGame(){
+  let interval = setInterval(()=>{
+    let s = document.createElement("div");
+    s.className="spider";
+    s.innerText="🕷️";
+    s.style.left=Math.random()*80+"%";
+    s.onclick=()=>{
+      score++;
+      document.getElementById("score").innerText=score;
+      s.remove();
+      if(score===5){
+        clearInterval(interval);
+        step3.classList.add("hidden");
+        birthday.classList.remove("hidden");
+      }
+    }
+    gameArea.appendChild(s);
+    setTimeout(()=>s.remove(),2000);
+  },700);
+}
+
+/* STICKERS */
+setInterval(()=>{
+  let st=document.createElement("div");
+  st.className="sticker";
+  st.innerText=Math.random()>0.5?"🕷️":"🦇";
+  st.style.left=Math.random()*100+"%";
+  st.style.animationDuration=3+Math.random()*3+"s";
+  document.body.appendChild(st);
+  setTimeout(()=>st.remove(),6000);
+},500);
+</script>
+
+</body>
+</html>
